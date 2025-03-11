@@ -25,14 +25,19 @@ services:
       - wp_data:/var/www/html
       - ./wp-content:/var/www/html/wp-content
       - ./wp-config.php:/var/www/html/wp-config.php:ro
+      - ./php-custom.ini:/usr/local/etc/php/conf.d/custom.ini
     environment:
       - WORDPRESS_DB_HOST=db
       - WORDPRESS_DB_USER=${MYSQL_USER}
       - WORDPRESS_DB_PASSWORD=${MYSQL_PASSWORD}
       - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
       - WORDPRESS_CONFIG_EXTRA=define('FS_METHOD', 'direct');
+      - UPLOAD_MAX_FILESIZE=128M
+      - POST_MAX_SIZE=128M
+      - MAX_EXECUTION_TIME=300
+      - HTTPS=on
     ports:
-      - "8080:80"
+      - "${WORDPRESS_EXPOSE}:${WORDPRESS_PORT}"
     networks:
       - wordpress_network
 

@@ -4,14 +4,12 @@
  */
 
 // Hardcode the website URLs without port
-define('WP_HOME', 'http://students.uz');
-define('WP_SITEURL', 'http://students.uz');
-
-// Force WordPress to use these URLs for everything
-define('WP_CONTENT_URL', 'http://students.uz/wp-content');
+define('WP_HOME', 'https://students.uz');
+define('WP_SITEURL', 'https://students.uz');
+define('WP_CONTENT_URL', 'https://students.uz/wp-content');
 
 // This prevents WordPress from doing any redirects
-define('FORCE_SSL_ADMIN', false);
+define('FORCE_SSL_ADMIN', true);
 
 // Prevent port detection/redirects
 if (strpos($_SERVER['HTTP_HOST'], ':') !== false) {
@@ -98,3 +96,7 @@ if (!defined('ABSPATH')) {
 
 /** Sets up WordPress vars and included files. */
 require_once ABSPATH . 'wp-settings.php';
+
+define('FS_METHOD', 'direct');
+define('FS_CHMOD_DIR', 0755);
+define('FS_CHMOD_FILE', 0644);
