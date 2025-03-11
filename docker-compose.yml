@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: ${CONTAINERS_PREFIX}${MYSQL_CONTAINER_NAME}
+    restart: always
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    networks:
+      - wordpress_network
+
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:latest
+    container_name: ${CONTAINERS_PREFIX}${WORDPRESS_CONTAINER_NAME}
+    restart: always
+    volumes:
+      - wp_data:/var/www/html
+      - ./wp-content:/var/www/html/wp-content
+      - ./wp-config.php:/var/www/html/wp-config.php:ro
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=${MYSQL_USER}
+      - WORDPRESS_DB_PASSWORD=${MYSQL_PASSWORD}
+      - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
+      - WORDPRESS_CONFIG_EXTRA=define('FS_METHOD', 'direct');
+    ports:
+      - "8080:80"
+    networks:
+      - wordpress_network
+
+volumes:
+  db_data:
+  wp_data:
+
+networks:
+  wordpress_network:
+    driver: bridge
